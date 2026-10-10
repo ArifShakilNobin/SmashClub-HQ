@@ -151,7 +151,7 @@ export default function DashboardPage() {
       }
       fetchRsvps(currentMatch.id);
       fetchPlayerRatings(currentMatch.id);
-      alert(`Apni ei match-e "${status.toUpperCase()}" hisebe set hoyechen!`);
+      alert(`You are marked as ${status.toUpperCase()} for this match!`);
     } else {
       alert('RSVP error: ' + error.message);
     }
@@ -160,7 +160,7 @@ export default function DashboardPage() {
   const handleVotePlayer = async (targetPlayerId: string, ratingValue: number) => {
     if (!user || !currentMatch) return;
     if (myRsvpStatus !== 'in') {
-      alert('Apni match-e "IN" na thakle vote dite parben na!');
+      alert('You must be marked as "IN" for this match to vote!');
       return;
     }
 
@@ -177,7 +177,7 @@ export default function DashboardPage() {
       alert('Vote successfully submitted!');
       fetchPlayerRatings(currentMatch.id);
     } else {
-      alert('Error: Apni ekjon-ke ekbar-er besi vote dite parben na ba target player "IN" nei.');
+      alert('Error: You can only vote once per player for each match, or the target player is not marked as "IN".');
     }
   };
 
