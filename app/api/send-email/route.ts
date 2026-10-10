@@ -19,11 +19,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No match record provided' }, { status: 400 });
     }
 
-    // 1. Database theke SUDHU MATRO 'player' role-er user-der email fetch kora
+    // 1. Fetch profiles from database where role is strictly 'player'
     const { data: players, error: userError } = await supabaseAdmin
       .from('profiles')
       .select('email, full_name, role')
-      .eq('role', 'player'); // Only fetch users with role = 'player'
+      .eq('role', 'player');
 
     if (userError || !players || players.length === 0) {
       return NextResponse.json({ error: 'No players found with role = player' }, { status: 400 });
@@ -33,10 +33,10 @@ export async function POST(request: Request) {
     const gmailPass = process.env.GMAIL_APP_PASSWORD;
 
     if (!gmailUser || !gmailPass) {
-      return NextResponse.json({ error: 'Missing GMAIL_USER or GMAIL_APP_PASSWORD' }, { status: 500 });
+      return NextResponse.json({ error: 'Missing GMAIL_USER or GMAIL_APP_PASSWORD in environment variables' }, { status: 500 });
     }
 
-    // 2. Nodemailer Transporter
+    // 2. Setup Nodemailer Transporter using Gmail service
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
 
     let sentCount = 0;
 
-    // 3. For loop chaliye SODHU 'player'-der kache alada alada mail pathano
+    // 3. Loop through each player and send individual emails securely
     for (const p of players) {
       if (p.email) {
         try {
